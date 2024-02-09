@@ -1,6 +1,150 @@
-[gd_scene load_steps=2 format=3 uid="uid://cqd6lge5p8f4f"]
+[gd_scene load_steps=8 format=3 uid="uid://cqd6lge5p8f4f"]
 
 [ext_resource type="Script" path="res://Src/Main.cs" id="1_2ci4r"]
+[ext_resource type="PackedScene" uid="uid://b2n8kem1hu8cm" path="res://Scenes/Arenas/TestArena.tscn" id="2_rodp5"]
+[ext_resource type="Script" path="res://Src/Tools/PlayerPhysicsPanel.cs" id="3_0j878"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_edyat"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.129412, 0.14902, 0.180392, 1)
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="Animation" id="Animation_777xm"]
+resource_name = "slide_in"
+length = 0.30001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(4, -220), Vector2(4, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_5120k"]
+resource_name = "slide_out"
+length = 0.30001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(4, 0), Vector2(4, -220)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pacjr"]
+_data = {
+"slide_in": SubResource("Animation_777xm"),
+"slide_out": SubResource("Animation_5120k")
+}
 
 [node name="Main" type="Node"]
 script = ExtResource("1_2ci4r")
+_initialScene = ExtResource("2_rodp5")
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="PlayerPhysicsPanel" type="PanelContainer" parent="Ui" node_paths=PackedStringArray("_speedInput", "_jumpHeightInput", "_jumpTimeToPeakInput", "_jumpTimeToFallInput", "_coyoteTimeDurationInput", "_wallJumpForceInput", "_animationPlayer")]
+anchors_preset = -1
+offset_left = 4.0
+offset_top = -220.0
+offset_right = 237.0
+offset_bottom = 33.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_edyat")
+script = ExtResource("3_0j878")
+_speedInput = NodePath("VBoxContainer/GridContainer/SpeedInput")
+_jumpHeightInput = NodePath("VBoxContainer/GridContainer/JumpHeightInput")
+_jumpTimeToPeakInput = NodePath("VBoxContainer/GridContainer/JumpTimeToPeak")
+_jumpTimeToFallInput = NodePath("VBoxContainer/GridContainer/JumpTimeToFallInput")
+_coyoteTimeDurationInput = NodePath("VBoxContainer/GridContainer/CoyoteTimeInput")
+_wallJumpForceInput = NodePath("VBoxContainer/GridContainer/WallJumpForceInput")
+_animationPlayer = NodePath("AnimationPlayer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Ui/PlayerPhysicsPanel"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="GridContainer" type="GridContainer" parent="Ui/PlayerPhysicsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+
+[node name="Label" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Speed"
+
+[node name="SpeedInput" type="LineEdit" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "xxx"
+placeholder_text = "600"
+
+[node name="Label2" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Jump Height"
+
+[node name="JumpHeightInput" type="LineEdit" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "xxx"
+placeholder_text = "600"
+
+[node name="Label3" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Jump time to peak"
+
+[node name="JumpTimeToPeak" type="LineEdit" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "xxx"
+placeholder_text = "600"
+
+[node name="Label4" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Jump time to fall"
+
+[node name="JumpTimeToFallInput" type="LineEdit" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "xxx"
+placeholder_text = "600"
+
+[node name="Label5" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Coyote time"
+
+[node name="CoyoteTimeInput" type="LineEdit" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "xxx"
+placeholder_text = "600"
+
+[node name="Label6" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Wall jump force"
+
+[node name="WallJumpForceInput" type="LineEdit" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "xxx"
+placeholder_text = "600"
+
+[node name="Label" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer"]
+layout_mode = 2
+text = "Player Physics (F1)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Ui/PlayerPhysicsPanel"]
+libraries = {
+"": SubResource("AnimationLibrary_pacjr")
+}

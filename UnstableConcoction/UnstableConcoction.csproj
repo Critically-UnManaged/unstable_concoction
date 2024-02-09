@@ -10,9 +10,6 @@
     <NoWarn>NU1605</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Src\Core\" />
-  </ItemGroup>
-  <ItemGroup>
     <!--Required for GdUnit4-->
     <PackageReference Include="gdUnit4.api" Version="4.2.0-rc*" />
   </ItemGroup>
