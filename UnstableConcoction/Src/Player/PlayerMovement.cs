@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System;
+using Godot;
 using Serilog;
 using UnstableConcoction.Extensions;
 
@@ -12,42 +13,54 @@ public partial class PlayerMovement: Node
     [Export][ExportGroup("Physics")] public float JumpTimeToPeak = 0.2f;
     [Export][ExportGroup("Physics")] public float JumpTimeToFall = 0.2f;
     [Export][ExportGroup("Physics")] public float CoyoteTimeDuration = 0.5f;
-    [Export] [ExportGroup("Physics")] public float WallJumpForce = 300;
-    [Export] [ExportGroup("Physics")] public float WallJumpInputIgnoreDuration = 0.5f;
+    [Export][ExportGroup("Physics")] public float WallJumpForce = 300;
+    [Export][ExportGroup("Physics")] public float WallJumpInputIgnoreDuration = 0.5f;
     
-    [Export][ExportGroup("Dependencies")] public CharacterBody2D Player = null!;
-    [Export][ExportGroup("Dependencies")] private Sprite2D _sprite = null!;
-    [Export][ExportGroup("Dependencies")] private AnimationTree _tree = null!;
+    [Export][RequiredExport][ExportGroup("Dependencies")]
+    public CharacterBody2D Player = null!;
+    
+    [Export][RequiredExport][ExportGroup("Dependencies")]
+    private Sprite2D _sprite = null!;
+    
+    [Export][RequiredExport][ExportGroup("Dependencies")]
+    private AnimationTree _tree = null!;
 
     private float JumpVelocity => (float)((2.0 * JumpHeight) / JumpTimeToPeak) * -1.0f;
     private float JumpGravity => (float)((-2.0 * JumpHeight) / (JumpTimeToPeak * JumpTimeToPeak)) * -1.0f;
     private float FallGravity => (float)((-2.0 * JumpHeight) / (JumpTimeToFall * JumpTimeToFall)) * -1.0f;
     private float Gravity => Player.Velocity.Y < 0.0f ? JumpGravity : FallGravity;
-    private float _coyoteTimeCounter;
-    private float _wallJumpInputIgnoreTimer;
-    private WallJumpDirection _lastWallJumpDirection = WallJumpDirection.None;
+    public float CoyoteTimeCounter { get; private set; }
+    public float WallJumpInputIgnoreTimer { get; private set; }
+    public WallJumpDirection LastWallJumpDirection { get; private set; } = WallJumpDirection.None;
+    public bool DidCoyoteJump { get; private set; }
 
-    
+
     public override void _PhysicsProcess(double delta)
     {
+        if (Player.IsOnFloor())
+        {
+            CoyoteTimeCounter = CoyoteTimeDuration;
+            LastWallJumpDirection = WallJumpDirection.None;
+            DidCoyoteJump = false;
+        }
+        
         Player.Velocity = Player.Velocity.WithYPlus(Gravity * (float)delta);
         
-        if (_lastWallJumpDirection == WallJumpDirection.None && _wallJumpInputIgnoreTimer <= 0.0f)
+        if (LastWallJumpDirection == WallJumpDirection.None && WallJumpInputIgnoreTimer <= 0.0f)
         {
             Player.Velocity = Player.Velocity.WithX(GetHorizontalVelocity() * Speed);
         }
         
-        _coyoteTimeCounter = Player.IsOnFloor() ? CoyoteTimeDuration : _coyoteTimeCounter - (float)delta;
-        _wallJumpInputIgnoreTimer = _wallJumpInputIgnoreTimer > 0 ? _wallJumpInputIgnoreTimer - (float)delta : 0;
+        if (!Player.IsOnFloor() && CoyoteTimeCounter > 0.0f)
+        {
+            CoyoteTimeCounter = Math.Clamp(CoyoteTimeCounter - (float)delta, 0.0f, CoyoteTimeDuration);
+        }
+        
+        WallJumpInputIgnoreTimer = WallJumpInputIgnoreTimer > 0 ? WallJumpInputIgnoreTimer - (float)delta : 0;
         
         if (Input.IsActionJustPressed("jump"))
         {
-            Jump();
-        }
-        
-        if (Player.IsOnFloor())
-        {
-            _lastWallJumpDirection = WallJumpDirection.None;
+            TryJump();
         }
         
         UpdateAnimations();
@@ -72,7 +85,32 @@ public partial class PlayerMovement: Node
         return horizontal;
     }
 
+    private void TryJump()
+    {
+        if (CoyoteTimeCounter > 0.0f && !DidCoyoteJump)
+        {
+            Log.Information("Performing coyote time jump");
+            Jump();
+            return;
+        }
+        
+        if (Player.IsOnFloor())
+        {
+            Log.Information("Performing regular jump");
+            Jump();
+            return;
+        }
+
+        HandleWallJump();
+    }
+
     private void Jump()
+    {
+        Player.Velocity = Player.Velocity.WithY(JumpVelocity);
+        LastWallJumpDirection = WallJumpDirection.None;
+    }
+    
+    private void HandleWallJump()
     {
         bool isOnLeftWall = IsOnWallLeft();
         bool isOnRightWall = !isOnLeftWall && Player.IsOnWall();
@@ -82,26 +120,17 @@ public partial class PlayerMovement: Node
             Log.Debug("Performing wall jump");
             WallJumpDirection currentWallSide = isOnLeftWall ? WallJumpDirection.Left : WallJumpDirection.Right;
 
-            if (_lastWallJumpDirection == currentWallSide && _lastWallJumpDirection != WallJumpDirection.None) return;
+            if (LastWallJumpDirection == currentWallSide && LastWallJumpDirection != WallJumpDirection.None) return;
             float horizontalForceDirection = isOnLeftWall ? 1 : -1;
             
             Player.Velocity = Player.Velocity.WithY(JumpVelocity);
             Player.Velocity = Player.Velocity.WithX(WallJumpForce * horizontalForceDirection);
         
-            _lastWallJumpDirection = currentWallSide;
-            _wallJumpInputIgnoreTimer = WallJumpInputIgnoreDuration;
-            return;
-        }
-        
-        if (_coyoteTimeCounter > 0.0f)
-        {
-            Log.Debug("Performing coyote time jump");
-            Player.Velocity = Player.Velocity.WithY(JumpVelocity);
-            _coyoteTimeCounter = 0.0f;
-            _lastWallJumpDirection = WallJumpDirection.None;
+            LastWallJumpDirection = currentWallSide;
+            WallJumpInputIgnoreTimer = WallJumpInputIgnoreDuration;
         }
     }
-    
+
     private bool IsOnWallLeft()
     {
         for (int i = 0; i < Player.GetSlideCollisionCount(); i++)
@@ -123,39 +152,44 @@ public partial class PlayerMovement: Node
             _sprite.FlipH = Player.Velocity.X < 0.0f;
         }
         
-        if (!Player.IsOnFloor() && _tree.GetCondition(PlayerAnimationsConditions.IS_JUMPING))
+        if (!Player.IsOnFloor() && _tree.GetCondition(AnimConditions.IS_JUMPING))
         {
             return;
         }
         
-        if (!Player.IsOnFloor() && !_tree.GetCondition(PlayerAnimationsConditions.IS_JUMPING))
+        if (!Player.IsOnFloor() && !_tree.GetCondition(AnimConditions.IS_JUMPING))
         {
-            _tree.SetCondition(PlayerAnimationsConditions.IS_IDLE, false);
-            _tree.SetCondition(PlayerAnimationsConditions.IS_RUNNING, false);
-            _tree.SetCondition(PlayerAnimationsConditions.IS_JUMPING, true);
+            _tree.SetCondition(AnimConditions.IS_IDLE, false);
+            _tree.SetCondition(AnimConditions.IS_RUNNING, false);
+            _tree.SetCondition(AnimConditions.IS_JUMPING, true);
             return;
         }
         
-        if (_tree.GetCondition(PlayerAnimationsConditions.IS_JUMPING) && Player.IsOnFloor())
+        if (_tree.GetCondition(AnimConditions.IS_JUMPING) && Player.IsOnFloor())
         {
-            _tree.SetCondition(PlayerAnimationsConditions.IS_JUMPING, false);
-            _tree.SetCondition(PlayerAnimationsConditions.IS_IDLE, true);
+            _tree.SetCondition(AnimConditions.IS_JUMPING, false);
+            _tree.SetCondition(AnimConditions.IS_IDLE, true);
             return;
         }
 
         if (!Player.Velocity.X.IsAbout(0.0f) && Player.IsOnFloor())
         {
-            _tree.SetCondition(PlayerAnimationsConditions.IS_IDLE, false);
-            _tree.SetCondition(PlayerAnimationsConditions.IS_RUNNING, true);
+            _tree.SetCondition(AnimConditions.IS_IDLE, false);
+            _tree.SetCondition(AnimConditions.IS_RUNNING, true);
             return;
         }
         
-        _tree.SetCondition(PlayerAnimationsConditions.IS_RUNNING, false);
-        _tree.SetCondition(PlayerAnimationsConditions.IS_JUMPING, false);
-        _tree.SetCondition(PlayerAnimationsConditions.IS_IDLE, true);
+        _tree.SetCondition(AnimConditions.IS_RUNNING, false);
+        _tree.SetCondition(AnimConditions.IS_JUMPING, false);
+        _tree.SetCondition(AnimConditions.IS_IDLE, true);
     }
-    
-    private enum WallJumpDirection
+
+    public override void _Ready()
+    {
+        this.ValidateRequiredExports();
+    }
+
+    public enum WallJumpDirection
     {
         None,
         Left,

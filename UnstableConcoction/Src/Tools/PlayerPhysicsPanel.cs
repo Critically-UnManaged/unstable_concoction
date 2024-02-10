@@ -1,8 +1,7 @@
 using System;
 using System.Globalization;
 using Godot;
-using Serilog;
-using UnstableConcoction.Player;
+using UnstableConcoction.Player.PlayerFsm;
 
 namespace UnstableConcoction.Tools;
 
@@ -19,8 +18,8 @@ public partial class PlayerPhysicsPanel : PanelContainer
     private bool _visible;
     private bool _firstTime = true;
     
-    private PlayerMovement Player => GetTree().Root.FindChild("PlayerMovement", owned: false) as PlayerMovement ??
-                                     throw new NullReferenceException("PlayerMovement node not found");
+    private PlayerMovementFsm Player => GetTree().Root.FindChild("PlayerMovementFsm", owned: false) as PlayerMovementFsm ??
+                                        throw new NullReferenceException("PlayerMovement node not found");
 
     public override void _Ready()
     {
@@ -36,7 +35,7 @@ public partial class PlayerPhysicsPanel : PanelContainer
     {
         if (float.TryParse(_speedInput.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float speed))
         {
-            Player!.Speed = speed;
+            Player.Speed = speed;
         }
         
     }
@@ -45,7 +44,7 @@ public partial class PlayerPhysicsPanel : PanelContainer
     {
         if (float.TryParse(_jumpHeightInput.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float jumpHeight))
         {
-            Player!.JumpHeight = jumpHeight;
+            Player.JumpHeight = jumpHeight;
         }
     }
     
@@ -53,7 +52,7 @@ public partial class PlayerPhysicsPanel : PanelContainer
     {
         if (float.TryParse(_jumpTimeToPeakInput.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float jumpTimeToPeak))
         {
-            Player!.JumpTimeToPeak = jumpTimeToPeak;
+            Player.JumpTimeToPeak = jumpTimeToPeak;
         }
     }
     
@@ -61,7 +60,7 @@ public partial class PlayerPhysicsPanel : PanelContainer
     {
         if (float.TryParse(_jumpTimeToFallInput.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float jumpTimeToFall))
         {
-            Player!.JumpTimeToFall = jumpTimeToFall;
+            Player.JumpTimeToFall = jumpTimeToFall;
         }
     }
     
@@ -69,7 +68,7 @@ public partial class PlayerPhysicsPanel : PanelContainer
     {
         if (float.TryParse(_coyoteTimeDurationInput.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float coyoteTimeDuration))
         {
-            Player!.CoyoteTimeDuration = coyoteTimeDuration;
+            Player.CoyoteTimeDuration = coyoteTimeDuration;
         }
     }
     
@@ -77,7 +76,7 @@ public partial class PlayerPhysicsPanel : PanelContainer
     {
         if (float.TryParse(_wallJumpForceInput.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float wallJumpForce))
         {
-            Player!.WallJumpForce = wallJumpForce;
+            Player.WallJumpForce = wallJumpForce;
         }
     }
     

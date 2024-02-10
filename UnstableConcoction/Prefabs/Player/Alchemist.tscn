@@ -2,10 +2,13 @@
 
 [ext_resource type="Texture2D" uid="uid://cphvlg3c12e5j" path="res://Assets/Sprites/vagabond/vagasheet.png" id="1_pgm6w"]
 [ext_resource type="Script" path="res://Src/Player/PlayerController.cs" id="1_q1tbq"]
+[ext_resource type="Script" path="res://Src/Player/PlayerFsm/PlayerMovementFsm.cs" id="2_q1git"]
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="3_4fljt"]
+[ext_resource type="Script" path="res://Src/Player/PlayerInteraction.cs" id="3_kiv6r"]
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2D.gd" id="4_xhrm8"]
-[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="5_bcl73"]
-[ext_resource type="Script" path="res://Src/Player/PlayerMovement.cs" id="6_2fbcv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_h3ce2"]
+radius = 18.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_daww8"]
 size = Vector2(8, 20)
@@ -46,7 +49,7 @@ tracks/0/keys = {
 [sub_resource type="Animation" id="Animation_vd7m1"]
 resource_name = "jump"
 length = 0.150005
-step = 0.05
+step = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -54,7 +57,7 @@ tracks/0/path = NodePath("Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05, 0.1),
+"times": PackedFloat32Array(0, 0.071, 0.121),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
 "values": [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]
@@ -193,21 +196,28 @@ states/running_end/position = Vector2(573, 485)
 transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_wtxg1"), "idle", "pre-jump", SubResource("AnimationNodeStateMachineTransition_qj41b"), "pre-jump", "jump", SubResource("AnimationNodeStateMachineTransition_wfta5"), "jump", "landing", SubResource("AnimationNodeStateMachineTransition_1lhef"), "landing", "idle", SubResource("AnimationNodeStateMachineTransition_x0j1q"), "idle", "running", SubResource("AnimationNodeStateMachineTransition_bvq5x"), "running", "running_end", SubResource("AnimationNodeStateMachineTransition_a2cl8"), "running_end", "idle", SubResource("AnimationNodeStateMachineTransition_yqlcq"), "running", "pre-jump", SubResource("AnimationNodeStateMachineTransition_lnmql")]
 graph_offset = Vector2(254, -157)
 
-[sub_resource type="Resource" id="Resource_5wtfy"]
-script = ExtResource("5_bcl73")
-duration = 1.0
-transition = 0
-ease = 2
-
-[node name="Alchemist" type="CharacterBody2D"]
+[node name="Alchemist" type="CharacterBody2D" groups=["Player"]]
 script = ExtResource("1_q1tbq")
 
-[node name="PlayerMovement" type="Node" parent="." node_paths=PackedStringArray("Player", "_sprite", "_tree")]
-unique_name_in_owner = true
-script = ExtResource("6_2fbcv")
+[node name="PlayerMovementFsm" type="Node" parent="." node_paths=PackedStringArray("Player", "Sprite", "Animation")]
+script = ExtResource("2_q1git")
+CoyoteTimeDuration = 0.1
 Player = NodePath("..")
-_sprite = NodePath("../Sprite2D")
-_tree = NodePath("../AnimationTree")
+Sprite = NodePath("../Sprite2D")
+Animation = NodePath("../AnimationTree")
+
+[node name="PlayerInteraction" type="Node2D" parent="." node_paths=PackedStringArray("_interactionArea")]
+script = ExtResource("3_kiv6r")
+_interactionArea = NodePath("InteractionArea")
+
+[node name="InteractionArea" type="Area2D" parent="PlayerInteraction"]
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerInteraction/InteractionArea"]
+position = Vector2(16, 17)
+shape = SubResource("CircleShape2D_h3ce2")
+debug_color = Color(0.94902, 0, 0.584314, 0.419608)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_pgm6w")
@@ -244,8 +254,9 @@ script = ExtResource("4_xhrm8")
 priority_override = false
 priority = 0
 zoom = Vector2(1, 1)
-follow_mode = 1
-follow_target = NodePath("")
+follow_mode = 2
+follow_target = NodePath("..")
+follow_parameters/target_offset = Vector2(0, 0)
 follow_parameters/damping = false
 frame_preview = true
 pixel_perfect = true
@@ -256,6 +267,6 @@ limit/right = 10000000
 limit/bottom = 10000000
 limit/limit_node_target = NodePath("")
 limit/smoothed = false
-tween_parameters = SubResource("Resource_5wtfy")
+tween_parameters = null
 tween_on_load = true
 inactive_update_mode = 0

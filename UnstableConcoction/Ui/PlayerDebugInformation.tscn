@@ -1,0 +1,76 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdm6r2ra3xoaa"]
+
+[ext_resource type="Script" path="res://Prefabs/Player/DebugInformation.cs" id="1_4blro"]
+
+[sub_resource type="SystemFont" id="SystemFont_iyp5a"]
+font_names = PackedStringArray("Comic Sans MS")
+
+[node name="DebugInformation" type="Control" node_paths=PackedStringArray("_isOnAirLabel", "_isOnWallLabel", "_coyoteTimeLabel", "_wallJumpIgnoreInputTime", "_playerMovement", "_body")]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_top = -57.0
+offset_right = 40.0
+offset_bottom = -17.0
+script = ExtResource("1_4blro")
+_isOnAirLabel = NodePath("")
+_isOnWallLabel = NodePath("")
+_coyoteTimeLabel = NodePath("")
+_wallJumpIgnoreInputTime = NodePath("")
+_playerMovement = NodePath("")
+_body = NodePath("")
+metadata/_edit_group_ = true
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+columns = 2
+
+[node name="Label" type="Label" parent="GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_iyp5a")
+theme_override_font_sizes/font_size = 8
+text = "isOnAir"
+
+[node name="IsOnAirValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_iyp5a")
+theme_override_font_sizes/font_size = 8
+text = "false"
+
+[node name="Label3" type="Label" parent="GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_iyp5a")
+theme_override_font_sizes/font_size = 8
+text = "isOnAir"
+
+[node name="IsOnWallValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_iyp5a")
+theme_override_font_sizes/font_size = 8
+text = "false"
+
+[node name="Label2" type="Label" parent="GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_iyp5a")
+theme_override_font_sizes/font_size = 8
+text = "CoyoteTime"
+
+[node name="CoyoteTimeValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_iyp5a")
+theme_override_font_sizes/font_size = 8
+text = "0.0"
+
+[node name="Label4" type="Label" parent="GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_iyp5a")
+theme_override_font_sizes/font_size = 8
+text = "WallJumpIgnoreInputeTime"
+
+[node name="WallJumpIgnoreInputTimeValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_iyp5a")
+theme_override_font_sizes/font_size = 8
+text = "0.0"

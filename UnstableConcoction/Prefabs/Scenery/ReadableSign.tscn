@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bst3sekybu8yh"]
+
+[ext_resource type="Script" path="res://Src/Interactions/ReadableObject.cs" id="1_2jdpb"]
+[ext_resource type="Texture2D" uid="uid://bk0gj7u4yrl7b" path="res://Assets/Sprites/cartel-feo.png" id="1_m34b5"]
+
+[node name="ReadableSign" type="Node2D"]
+script = ExtResource("1_2jdpb")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_m34b5")

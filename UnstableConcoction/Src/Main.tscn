@@ -58,7 +58,6 @@ _initialScene = ExtResource("2_rodp5")
 [node name="Ui" type="CanvasLayer" parent="."]
 
 [node name="PlayerPhysicsPanel" type="PanelContainer" parent="Ui" node_paths=PackedStringArray("_speedInput", "_jumpHeightInput", "_jumpTimeToPeakInput", "_jumpTimeToFallInput", "_coyoteTimeDurationInput", "_wallJumpForceInput", "_animationPlayer")]
-anchors_preset = -1
 offset_left = 4.0
 offset_top = -220.0
 offset_right = 237.0

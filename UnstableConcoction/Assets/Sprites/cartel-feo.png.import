@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4ob2oiu44v0h"
-path="res://.godot/imported/vagabond-air-dash.png-f1a043a51066e3ebb3738af76ae52501.ctex"
+uid="uid://bk0gj7u4yrl7b"
+path="res://.godot/imported/cartel-feo.png-b538bca4eaa2d96c0ac560b54f3d89c5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/vagabond/vagabond-air-dash.png"
-dest_files=["res://.godot/imported/vagabond-air-dash.png-f1a043a51066e3ebb3738af76ae52501.ctex"]
+source_file="res://Assets/Sprites/cartel-feo.png"
+dest_files=["res://.godot/imported/cartel-feo.png-b538bca4eaa2d96c0ac560b54f3d89c5.ctex"]
 
 [params]
 
