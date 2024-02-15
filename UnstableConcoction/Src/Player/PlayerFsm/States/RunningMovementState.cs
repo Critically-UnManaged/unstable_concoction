@@ -33,8 +33,20 @@ public class RunningMovementState : PlayerMovementMovementState
         {
             CoyoteTimeCounter = Mathf.Clamp(CoyoteTimeCounter - delta, 0.0f, Fsm.CoyoteTimeDuration);
         }
+
+        float horizontalInput = 0f;
         
-        float horizontalInput = Input.GetActionStrength("run_right") - Input.GetActionStrength("run_left");
+        if (Input.IsActionPressed("run_right"))
+        {
+            horizontalInput += 1f;
+        }
+
+        if (Input.IsActionPressed("run_left"))
+        {
+            horizontalInput += 1f;
+            
+        }
+        
         CurrentVelocity = Player.Velocity.WithX(horizontalInput * Fsm.Speed);
         Fsm.UpdateVelocity(CurrentVelocity);
         
