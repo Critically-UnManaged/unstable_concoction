@@ -14,6 +14,9 @@ config/name="UnstableConcoction"
 config/tags=PackedStringArray("criticallyunmanaged")
 run/main_scene="res://Src/Main.tscn"
 config/features=PackedStringArray("4.2", "C#")
+boot_splash/show_image=false
+boot_splash/fullsize=false
+boot_splash/use_filter=false
 config/icon="res://Assets/Sprites/icon.png"
 
 [autoload]

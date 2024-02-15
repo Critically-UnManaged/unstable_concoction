@@ -2,7 +2,8 @@ using Godot;
 
 namespace UnstableConcoction;
 
-public partial class Main : Node
+[GlobalClass]
+public partial class SceneManager : Node
 {
     [Export] private PackedScene _initialScene = null!;
     
@@ -20,20 +21,6 @@ public partial class Main : Node
     }
     
     private void StartGame()
-    {
-        var children = GetChildren();
-        foreach (Node child in children)
-        {
-            if (child.Name != "Ui")
-            {
-                child.QueueFree();
-            }
-        }
-
-        CallDeferred(nameof(InstantiateScene));
-    }
-    
-    public void InstantiateScene()
     {
         Node? newScene = _initialScene.Instantiate();
         AddChild(newScene);

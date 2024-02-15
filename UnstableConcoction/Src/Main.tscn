@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://cqd6lge5p8f4f"]
+[gd_scene load_steps=9 format=3 uid="uid://cqd6lge5p8f4f"]
 
-[ext_resource type="Script" path="res://Src/Main.cs" id="1_2ci4r"]
+[ext_resource type="Script" path="res://Src/SceneManager.cs" id="2_ouhvn"]
 [ext_resource type="PackedScene" uid="uid://b2n8kem1hu8cm" path="res://Scenes/Arenas/TestArena.tscn" id="2_rodp5"]
 [ext_resource type="Script" path="res://Src/Tools/PlayerPhysicsPanel.cs" id="3_0j878"]
+[ext_resource type="Script" path="res://Src/Di/NodesProvider.cs" id="4_byry5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_edyat"]
 content_margin_left = 10.0
@@ -52,12 +53,17 @@ _data = {
 }
 
 [node name="Main" type="Node"]
-script = ExtResource("1_2ci4r")
+
+[node name="NodesProvider" type="Node" parent="."]
+script = ExtResource("4_byry5")
+
+[node name="SceneManager" type="Node" parent="NodesProvider"]
+script = ExtResource("2_ouhvn")
 _initialScene = ExtResource("2_rodp5")
 
-[node name="Ui" type="CanvasLayer" parent="."]
+[node name="Ui" type="CanvasLayer" parent="NodesProvider"]
 
-[node name="PlayerPhysicsPanel" type="PanelContainer" parent="Ui" node_paths=PackedStringArray("_speedInput", "_jumpHeightInput", "_jumpTimeToPeakInput", "_jumpTimeToFallInput", "_coyoteTimeDurationInput", "_wallJumpForceInput", "_animationPlayer")]
+[node name="PlayerPhysicsPanel" type="PanelContainer" parent="NodesProvider/Ui" node_paths=PackedStringArray("_speedInput", "_jumpHeightInput", "_jumpTimeToPeakInput", "_jumpTimeToFallInput", "_coyoteTimeDurationInput", "_wallJumpForceInput", "_animationPlayer")]
 offset_left = 4.0
 offset_top = -220.0
 offset_right = 237.0
@@ -74,76 +80,76 @@ _coyoteTimeDurationInput = NodePath("VBoxContainer/GridContainer/CoyoteTimeInput
 _wallJumpForceInput = NodePath("VBoxContainer/GridContainer/WallJumpForceInput")
 _animationPlayer = NodePath("AnimationPlayer")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Ui/PlayerPhysicsPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="NodesProvider/Ui/PlayerPhysicsPanel"]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="GridContainer" type="GridContainer" parent="Ui/PlayerPhysicsPanel/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 columns = 2
 
-[node name="Label" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Speed"
 
-[node name="SpeedInput" type="LineEdit" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+[node name="SpeedInput" type="LineEdit" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "xxx"
 placeholder_text = "600"
 
-[node name="Label2" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+[node name="Label2" type="Label" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Jump Height"
 
-[node name="JumpHeightInput" type="LineEdit" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+[node name="JumpHeightInput" type="LineEdit" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "xxx"
 placeholder_text = "600"
 
-[node name="Label3" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+[node name="Label3" type="Label" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Jump time to peak"
 
-[node name="JumpTimeToPeak" type="LineEdit" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+[node name="JumpTimeToPeak" type="LineEdit" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "xxx"
 placeholder_text = "600"
 
-[node name="Label4" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+[node name="Label4" type="Label" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Jump time to fall"
 
-[node name="JumpTimeToFallInput" type="LineEdit" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+[node name="JumpTimeToFallInput" type="LineEdit" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "xxx"
 placeholder_text = "600"
 
-[node name="Label5" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+[node name="Label5" type="Label" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Coyote time"
 
-[node name="CoyoteTimeInput" type="LineEdit" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+[node name="CoyoteTimeInput" type="LineEdit" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "xxx"
 placeholder_text = "600"
 
-[node name="Label6" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+[node name="Label6" type="Label" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Wall jump force"
 
-[node name="WallJumpForceInput" type="LineEdit" parent="Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
+[node name="WallJumpForceInput" type="LineEdit" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "xxx"
 placeholder_text = "600"
 
-[node name="Label" type="Label" parent="Ui/PlayerPhysicsPanel/VBoxContainer"]
+[node name="Label" type="Label" parent="NodesProvider/Ui/PlayerPhysicsPanel/VBoxContainer"]
 layout_mode = 2
 text = "Player Physics (F1)"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Ui/PlayerPhysicsPanel"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="NodesProvider/Ui/PlayerPhysicsPanel"]
 libraries = {
 "": SubResource("AnimationLibrary_pacjr")
 }

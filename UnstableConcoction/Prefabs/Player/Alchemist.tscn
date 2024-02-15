@@ -3,15 +3,15 @@
 [ext_resource type="Texture2D" uid="uid://cphvlg3c12e5j" path="res://Assets/Sprites/vagabond/vagasheet.png" id="1_pgm6w"]
 [ext_resource type="Script" path="res://Src/Player/PlayerController.cs" id="1_q1tbq"]
 [ext_resource type="Script" path="res://Src/Player/PlayerFsm/PlayerMovementFsm.cs" id="2_q1git"]
-[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="3_4fljt"]
 [ext_resource type="Script" path="res://Src/Player/PlayerInteraction.cs" id="3_kiv6r"]
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2D.gd" id="4_xhrm8"]
+[ext_resource type="Script" path="res://Src/GdBinds/PhantomCamera2DWrapper.cs" id="6_elyag"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_h3ce2"]
 radius = 18.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_daww8"]
-size = Vector2(8, 20)
+size = Vector2(9, 22)
 
 [sub_resource type="Animation" id="Animation_xwsgg"]
 length = 0.001
@@ -197,6 +197,7 @@ transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition
 graph_offset = Vector2(254, -157)
 
 [node name="Alchemist" type="CharacterBody2D" groups=["Player"]]
+floor_block_on_wall = false
 script = ExtResource("1_q1tbq")
 
 [node name="PlayerMovementFsm" type="Node" parent="." node_paths=PackedStringArray("Player", "Sprite", "Animation")]
@@ -215,18 +216,17 @@ collision_layer = 4
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerInteraction/InteractionArea"]
-position = Vector2(16, 17)
 shape = SubResource("CircleShape2D_h3ce2")
 debug_color = Color(0.94902, 0, 0.584314, 0.419608)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_pgm6w")
-centered = false
+offset = Vector2(0, -3.865)
 hframes = 8
 vframes = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(16, 22)
+position = Vector2(-0.5, 2)
 shape = SubResource("RectangleShape2D_daww8")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -244,20 +244,20 @@ parameters/conditions/isIdle = false
 parameters/conditions/isJumping = false
 parameters/conditions/isRunning = false
 
-[node name="Camera2D" type="Camera2D" parent="."]
-
-[node name="PhantomCameraHost" type="Node" parent="Camera2D"]
-script = ExtResource("3_4fljt")
-
 [node name="PhantomCamera2D" type="Node2D" parent="."]
 script = ExtResource("4_xhrm8")
 priority_override = false
 priority = 0
 zoom = Vector2(1, 1)
-follow_mode = 2
-follow_target = NodePath("..")
+follow_mode = 3
+follow_group = Array[NodePath]([NodePath("..")])
+follow_parameters/auto_zoom = true
+follow_parameters/min_zoom = 0.01
+follow_parameters/max_zoom = 5.0
+follow_parameters/zoom_margin = Vector4(0, 0, 0, 0)
 follow_parameters/target_offset = Vector2(0, 0)
-follow_parameters/damping = false
+follow_parameters/damping = true
+follow_parameters/damping_value = 10.0
 frame_preview = true
 pixel_perfect = true
 limit/draw_limits = false
@@ -270,3 +270,6 @@ limit/smoothed = false
 tween_parameters = null
 tween_on_load = true
 inactive_update_mode = 0
+
+[node name="PhantomCamera2DWrapper" type="Node2D" parent="." groups=["Camera"]]
+script = ExtResource("6_elyag")
