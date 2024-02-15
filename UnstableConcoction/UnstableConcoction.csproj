@@ -18,4 +18,12 @@
     <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Chickensoft.AutoInject" Version="1.5.0" />
+    <PackageReference Include="Chickensoft.SuperNodes" Version="1.7.0" PrivateAssets="all" OutputItemType="analyzer" />
+    <PackageReference Include="Chickensoft.SuperNodes.Types" Version="1.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Src\GdBinds\" />
+  </ItemGroup>
 </Project>

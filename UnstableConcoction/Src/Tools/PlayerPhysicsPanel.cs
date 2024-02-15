@@ -1,12 +1,18 @@
 using System;
 using System.Globalization;
+using Chickensoft.AutoInject;
 using Godot;
+using SuperNodes.Types;
+using UnstableConcoction.Player;
 using UnstableConcoction.Player.PlayerFsm;
 
 namespace UnstableConcoction.Tools;
 
+[SuperNode(typeof(Dependent))]
 public partial class PlayerPhysicsPanel : PanelContainer
 {
+    public override partial void _Notification(int what);
+    
     [Export] private LineEdit _speedInput = null!;
     [Export] private LineEdit _jumpHeightInput = null!;
     [Export] private LineEdit _jumpTimeToPeakInput = null!;
@@ -17,9 +23,10 @@ public partial class PlayerPhysicsPanel : PanelContainer
     
     private bool _visible;
     private bool _firstTime = true;
-    
-    private PlayerMovementFsm Player => GetTree().Root.FindChild("PlayerMovementFsm", owned: false) as PlayerMovementFsm ??
-                                        throw new NullReferenceException("PlayerMovement node not found");
+
+    [Dependency] private PlayerController Pc => DependOn<PlayerController>();
+    private PlayerMovementFsm? Player => Pc.Fsm;
+   
 
     public override void _Ready()
     {
@@ -35,7 +42,7 @@ public partial class PlayerPhysicsPanel : PanelContainer
     {
         if (float.TryParse(_speedInput.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float speed))
         {
-            Player.Speed = speed;
+            if (Player != null) Player.Speed = speed;
         }
         
     }
@@ -44,7 +51,7 @@ public partial class PlayerPhysicsPanel : PanelContainer
     {
         if (float.TryParse(_jumpHeightInput.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float jumpHeight))
         {
-            Player.JumpHeight = jumpHeight;
+            if (Player != null) Player.JumpHeight = jumpHeight;
         }
     }
     
@@ -52,7 +59,7 @@ public partial class PlayerPhysicsPanel : PanelContainer
     {
         if (float.TryParse(_jumpTimeToPeakInput.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float jumpTimeToPeak))
         {
-            Player.JumpTimeToPeak = jumpTimeToPeak;
+            if (Player != null) Player.JumpTimeToPeak = jumpTimeToPeak;
         }
     }
     
@@ -60,7 +67,7 @@ public partial class PlayerPhysicsPanel : PanelContainer
     {
         if (float.TryParse(_jumpTimeToFallInput.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float jumpTimeToFall))
         {
-            Player.JumpTimeToFall = jumpTimeToFall;
+            if (Player != null) Player.JumpTimeToFall = jumpTimeToFall;
         }
     }
     
@@ -68,7 +75,7 @@ public partial class PlayerPhysicsPanel : PanelContainer
     {
         if (float.TryParse(_coyoteTimeDurationInput.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float coyoteTimeDuration))
         {
-            Player.CoyoteTimeDuration = coyoteTimeDuration;
+            if (Player != null) Player.CoyoteTimeDuration = coyoteTimeDuration;
         }
     }
     
@@ -76,7 +83,7 @@ public partial class PlayerPhysicsPanel : PanelContainer
     {
         if (float.TryParse(_wallJumpForceInput.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float wallJumpForce))
         {
-            Player.WallJumpForce = wallJumpForce;
+            if (Player != null) Player.WallJumpForce = wallJumpForce;
         }
     }
     
@@ -86,12 +93,12 @@ public partial class PlayerPhysicsPanel : PanelContainer
 
         if (_firstTime)
         {
-            _speedInput.Text = Player.Speed.ToString(CultureInfo.InvariantCulture);
-            _jumpHeightInput.Text = Player.JumpHeight.ToString(CultureInfo.InvariantCulture);
-            _jumpTimeToPeakInput.Text = Player.JumpTimeToPeak.ToString(CultureInfo.InvariantCulture);
-            _jumpTimeToFallInput.Text = Player.JumpTimeToFall.ToString(CultureInfo.InvariantCulture);
-            _coyoteTimeDurationInput.Text = Player.CoyoteTimeDuration.ToString(CultureInfo.InvariantCulture);
-            _wallJumpForceInput.Text = Player.WallJumpForce.ToString(CultureInfo.InvariantCulture);
+            _speedInput.Text = Player?.Speed.ToString(CultureInfo.InvariantCulture);
+            _jumpHeightInput.Text = Player?.JumpHeight.ToString(CultureInfo.InvariantCulture);
+            _jumpTimeToPeakInput.Text = Player?.JumpTimeToPeak.ToString(CultureInfo.InvariantCulture);
+            _jumpTimeToFallInput.Text = Player?.JumpTimeToFall.ToString(CultureInfo.InvariantCulture);
+            _coyoteTimeDurationInput.Text = Player?.CoyoteTimeDuration.ToString(CultureInfo.InvariantCulture);
+            _wallJumpForceInput.Text = Player?.WallJumpForce.ToString(CultureInfo.InvariantCulture);
             _firstTime = false;
         }
         
