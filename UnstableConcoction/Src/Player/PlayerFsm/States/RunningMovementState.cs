@@ -43,7 +43,7 @@ public class RunningMovementState : PlayerMovementMovementState
 
         if (Input.IsActionPressed("run_left"))
         {
-            horizontalInput += 1f;
+            horizontalInput -= 1f;
             
         }
         
