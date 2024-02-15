@@ -16,10 +16,8 @@
     
     "gdUnit4": {
           "url": "https://github.com/MikeSchulze/gdUnit4",
-          "checkout": "v4.2.0",
+          "checkout": "v4.2.1",
           "subfolder": "addons/gdUnit4"
-    },
-    
-    
+    }
   }
 }
