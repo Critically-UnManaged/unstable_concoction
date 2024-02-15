@@ -19,7 +19,6 @@ public class IdleMovementState : PlayerMovementMovementState
 
     public override void Enter()
     {
-        Log.Debug("Entering IdleMovementState...");
         Animation.SetCondition(AnimConditions.IS_IDLE, true);
         CurrentVelocity = Vector2.Zero;
         Fsm.UpdateVelocity(CurrentVelocity);
@@ -27,7 +26,6 @@ public class IdleMovementState : PlayerMovementMovementState
 
     public override void Exit()
     {
-        Log.Debug("Exiting IdleMovementState...");
         Animation.SetCondition(AnimConditions.IS_IDLE, false);
     }
 

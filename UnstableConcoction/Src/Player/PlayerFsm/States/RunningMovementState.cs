@@ -1,5 +1,4 @@
 ﻿using Godot;
-using Serilog;
 using UnstableConcoction.Extensions;
 
 namespace UnstableConcoction.Player.PlayerFsm.States;
@@ -14,16 +13,12 @@ public class RunningMovementState : PlayerMovementMovementState
 
     public override void Enter()
     {
-        Log.Debug("Entering RunningMovementState...");
-        Animation.SetCondition(AnimConditions.IS_IDLE, false);
-        Animation.SetCondition(AnimConditions.IS_JUMPING, false);
         Animation.SetCondition(AnimConditions.IS_RUNNING, true);
         CoyoteTimeCounter = Fsm.CoyoteTimeDuration;
     }
 
     public override void Exit()
     {
-        Log.Debug("Exiting RunningMovementState...");
         Animation.SetCondition(AnimConditions.IS_RUNNING, false);
     }
 

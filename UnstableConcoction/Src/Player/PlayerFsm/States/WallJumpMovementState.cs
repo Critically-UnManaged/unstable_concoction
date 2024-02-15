@@ -15,12 +15,7 @@ public class WallJumpMovementState: PlayerMovementMovementState
 
     public override void Enter()
     {
-        Log.Debug("Entering WallJumpMovementState...");
-        Animation.SetCondition(AnimConditions.IS_JUMPING, false);
-        Animation.SetCondition(AnimConditions.IS_RUNNING, false);
-        Animation.SetCondition(AnimConditions.IS_IDLE, true);
-        Animation.SetCondition(AnimConditions.IS_IDLE, false); //retrigger jump animation
-        Animation.SetCondition(AnimConditions.IS_JUMPING, true);
+        RetriggerAnimation();
         
         WallJumpDirection currentWallSlide = IsOnWallLeft() ? WallJumpDirection.Left : WallJumpDirection.Right;
         
@@ -40,7 +35,7 @@ public class WallJumpMovementState: PlayerMovementMovementState
 
     public override void Exit()
     {
-        Log.Debug("Exiting WallJumpMovementState...");
+        Animation.SetCondition(AnimConditions.IS_JUMPING, false);
     }
 
     public override void PhysicsProcess(float delta)
@@ -69,6 +64,13 @@ public class WallJumpMovementState: PlayerMovementMovementState
             }
         }
         return false;
+    }
+
+    private void RetriggerAnimation()
+    {
+        Animation.SetCondition(AnimConditions.IS_IDLE, true);
+        Animation.SetCondition(AnimConditions.IS_IDLE, false);
+        Animation.SetCondition(AnimConditions.IS_JUMPING, true);
     }
     
     public override string ToString() => nameof(WallJumpMovementState);

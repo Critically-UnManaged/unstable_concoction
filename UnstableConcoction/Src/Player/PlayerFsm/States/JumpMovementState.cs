@@ -1,5 +1,4 @@
 ﻿using Godot;
-using Serilog;
 using UnstableConcoction.Extensions;
 
 namespace UnstableConcoction.Player.PlayerFsm.States;
@@ -19,9 +18,6 @@ public class JumpMovementState : PlayerMovementMovementState
 
     public override void Enter()
     {
-        Log.Debug("Entering JumpMovementState...");
-        Animation.SetCondition(AnimConditions.IS_IDLE, false);
-        Animation.SetCondition(AnimConditions.IS_RUNNING, false);
         Animation.SetCondition(AnimConditions.IS_JUMPING, true);
         
         CurrentVelocity = Fsm.CurrentVelocity.WithY(Fsm.JumpVelocity);
@@ -30,7 +26,6 @@ public class JumpMovementState : PlayerMovementMovementState
 
     public override void Exit()
     {
-        Log.Debug("Exiting JumpMovementState...");
         Animation.SetCondition(AnimConditions.IS_JUMPING, false);
     }
 
@@ -45,7 +40,6 @@ public class JumpMovementState : PlayerMovementMovementState
         if (ShouldTransitionToWallJump)
         {
             Fsm.ChangeState(new WallJumpMovementState(Fsm));
-            return;
         }
     }
     
