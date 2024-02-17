@@ -14,7 +14,7 @@ public class RunState: MovementState
     private bool ShouldTransitionToFall =>
         !PlayerMovement.Player.IsOnFloor() && AirRunningTimer > PlayerMovement.CoyoteTimeDuration;
     
-    private float AirRunningTimer { get; set; }
+    public float AirRunningTimer { get; private set; }
     
     public RunState(PlayerMovement playerMovement) : base(playerMovement)
     {

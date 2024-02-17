@@ -17,8 +17,7 @@ public class JumpState: MovementState
     private static bool IsPressingMovementKeys =>
         Input.IsActionPressed("run_left") || Input.IsActionPressed("run_right");
     
-    private static bool IsHoldingJump =>
-        Input.IsActionPressed("jump");
+    private bool ReleasedJump { get; set; }
 
     public float HoldingJumpTimer { get; private set; }
     public float AirTimer { get; private set; }
@@ -44,8 +43,12 @@ public class JumpState: MovementState
     public override void Update(float delta)
     {
         AirTimer += delta;
+        if (Input.IsActionJustReleased("jump"))
+        {
+            ReleasedJump = true;
+        }
         
-        if (IsHoldingJump && HoldingJumpTimer < PlayerMovement.JumpTimeToPeak)
+        if (!ReleasedJump && HoldingJumpTimer < PlayerMovement.JumpTimeToPeak)
         {
             HoldingJumpTimer += delta;
             

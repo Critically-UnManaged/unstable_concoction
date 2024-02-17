@@ -43,7 +43,7 @@ public partial class PlayerMovement: Node
     
     [ExportGroup("Running physics")]
     [Export]
-    public float CoyoteTimeDuration { get; set; } = 0.3f;
+    public float CoyoteTimeDuration { get; set; } = 0.2f;
     #endregion
 
     #region Jumping physics
@@ -61,7 +61,7 @@ public partial class PlayerMovement: Node
     
     [ExportGroup("Jumping Physics")]
     [Export]
-    public float JumpTimeToFall { get; set; } = 0.2f;
+    public float JumpTimeToFall { get; set; } = 0.14f;
     
     [ExportGroup("Jumping Physics")]
     [Export]

@@ -284,7 +284,6 @@ script = ExtResource("6_elyag")
 PhantomCamera = NodePath("../PhantomCamera2D")
 
 [node name="DebugInformation" type="Node2D" parent="."]
-visible = false
 
 [node name="VelocityDebug" type="Label" parent="DebugInformation" node_paths=PackedStringArray("_player")]
 offset_left = -20.0
