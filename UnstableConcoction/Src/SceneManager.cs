@@ -12,14 +12,14 @@ public partial class SceneManager : Node
         StartGame();
     }
 
-    public override void _PhysicsProcess(double delta)
+    public override void _UnhandledInput(InputEvent @event)
     {
         if (Input.IsActionJustPressed("reset"))
         {
-            StartGame();
+            GetTree().ReloadCurrentScene();
         }
     }
-    
+
     private void StartGame()
     {
         Node? newScene = _initialScene.Instantiate();

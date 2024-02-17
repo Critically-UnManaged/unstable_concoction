@@ -1,24 +1,23 @@
-[gd_scene load_steps=32 format=3 uid="uid://cv72wmgp4kwae"]
+[gd_scene load_steps=35 format=3 uid="uid://cv72wmgp4kwae"]
 
 [ext_resource type="Texture2D" uid="uid://cphvlg3c12e5j" path="res://Assets/Sprites/vagabond/vagasheet.png" id="1_pgm6w"]
-[ext_resource type="Script" path="res://Src/Player/PlayerController.cs" id="1_q1tbq"]
-[ext_resource type="Script" path="res://Src/Player/PlayerFsm/PlayerMovementFsm.cs" id="2_q1git"]
+[ext_resource type="Script" path="res://Src/Player/Player.cs" id="1_xstu4"]
 [ext_resource type="Script" path="res://Src/Player/PlayerInteraction.cs" id="3_kiv6r"]
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2D.gd" id="4_xhrm8"]
 [ext_resource type="Script" path="res://Src/GdBinds/PhantomCamera2DWrapper.cs" id="6_elyag"]
+[ext_resource type="Script" path="res://Src/Player/Movement/PlayerMovement.cs" id="7_0tqp1"]
+[ext_resource type="Script" path="res://Src/Player/Debug/PlayerPhysDebug.cs" id="7_pb5n5"]
+[ext_resource type="Script" path="res://Src/Player/Debug/StateDebug.cs" id="8_qchvr"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_h3ce2"]
 radius = 18.0
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_daww8"]
-size = Vector2(9, 22)
 
 [sub_resource type="Animation" id="Animation_xwsgg"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("PlayerVisuals/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -36,7 +35,7 @@ step = 0.2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("PlayerVisuals/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -53,7 +52,7 @@ step = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("PlayerVisuals/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -70,7 +69,7 @@ step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("PlayerVisuals/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -88,7 +87,7 @@ step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("PlayerVisuals/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -105,7 +104,7 @@ step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("PlayerVisuals/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -156,11 +155,12 @@ advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1lhef"]
 advance_mode = 2
-advance_condition = &"isIdle"
+advance_condition = &"isLanding"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_x0j1q"]
 switch_mode = 2
 advance_mode = 2
+advance_condition = &"isIdle"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_bvq5x"]
 advance_mode = 2
@@ -178,34 +178,41 @@ advance_mode = 2
 advance_mode = 2
 advance_condition = &"isJumping"
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_lsv4j"]
+switch_mode = 2
+advance_mode = 2
+advance_condition = &"isRunning"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_khwfa"]
 states/End/position = Vector2(1392, 136)
 states/Start/position = Vector2(406, 197)
 states/idle/node = SubResource("AnimationNodeAnimation_6k1eq")
-states/idle/position = Vector2(567, 197)
+states/idle/position = Vector2(604, 49)
 states/jump/node = SubResource("AnimationNodeAnimation_mts2r")
-states/jump/position = Vector2(966, 197)
+states/jump/position = Vector2(1228, 490)
 states/landing/node = SubResource("AnimationNodeAnimation_4obb1")
-states/landing/position = Vector2(886, 17)
+states/landing/position = Vector2(1219, 49)
 states/pre-jump/node = SubResource("AnimationNodeAnimation_c3k1u")
-states/pre-jump/position = Vector2(822, 197)
+states/pre-jump/position = Vector2(690, 490)
 states/running/node = SubResource("AnimationNodeAnimation_1qry1")
-states/running/position = Vector2(788, 485)
+states/running/position = Vector2(850, 355)
 states/running_end/node = SubResource("AnimationNodeAnimation_feg23")
-states/running_end/position = Vector2(573, 485)
-transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_wtxg1"), "idle", "pre-jump", SubResource("AnimationNodeStateMachineTransition_qj41b"), "pre-jump", "jump", SubResource("AnimationNodeStateMachineTransition_wfta5"), "jump", "landing", SubResource("AnimationNodeStateMachineTransition_1lhef"), "landing", "idle", SubResource("AnimationNodeStateMachineTransition_x0j1q"), "idle", "running", SubResource("AnimationNodeStateMachineTransition_bvq5x"), "running", "running_end", SubResource("AnimationNodeStateMachineTransition_a2cl8"), "running_end", "idle", SubResource("AnimationNodeStateMachineTransition_yqlcq"), "running", "pre-jump", SubResource("AnimationNodeStateMachineTransition_lnmql")]
-graph_offset = Vector2(254, -157)
+states/running_end/position = Vector2(850, 127)
+transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_wtxg1"), "idle", "pre-jump", SubResource("AnimationNodeStateMachineTransition_qj41b"), "pre-jump", "jump", SubResource("AnimationNodeStateMachineTransition_wfta5"), "jump", "landing", SubResource("AnimationNodeStateMachineTransition_1lhef"), "landing", "idle", SubResource("AnimationNodeStateMachineTransition_x0j1q"), "idle", "running", SubResource("AnimationNodeStateMachineTransition_bvq5x"), "running", "running_end", SubResource("AnimationNodeStateMachineTransition_a2cl8"), "running_end", "idle", SubResource("AnimationNodeStateMachineTransition_yqlcq"), "running", "pre-jump", SubResource("AnimationNodeStateMachineTransition_lnmql"), "landing", "running", SubResource("AnimationNodeStateMachineTransition_lsv4j")]
+graph_offset = Vector2(30, -73)
 
-[node name="Alchemist" type="CharacterBody2D" groups=["Player"]]
-floor_block_on_wall = false
-script = ExtResource("1_q1tbq")
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_daww8"]
+size = Vector2(9, 22)
 
-[node name="PlayerMovementFsm" type="Node" parent="." node_paths=PackedStringArray("Player", "Sprite", "Animation")]
-script = ExtResource("2_q1git")
-CoyoteTimeDuration = 0.1
+[node name="Alchemist" type="CharacterBody2D" node_paths=PackedStringArray("PlayerMovement") groups=["Player"]]
+script = ExtResource("1_xstu4")
+PlayerMovement = NodePath("PlayerMovement")
+
+[node name="PlayerMovement" type="Node" parent="." node_paths=PackedStringArray("Player", "AnimationTree", "Sprite")]
+script = ExtResource("7_0tqp1")
 Player = NodePath("..")
-Sprite = NodePath("../Sprite2D")
-Animation = NodePath("../AnimationTree")
+AnimationTree = NodePath("../PlayerVisuals/AnimationTree")
+Sprite = NodePath("../PlayerVisuals/Sprite2D")
 
 [node name="PlayerInteraction" type="Node2D" parent="." node_paths=PackedStringArray("_interactionArea")]
 script = ExtResource("3_kiv6r")
@@ -219,22 +226,22 @@ collision_mask = 4
 shape = SubResource("CircleShape2D_h3ce2")
 debug_color = Color(0.94902, 0, 0.584314, 0.419608)
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="PlayerVisuals" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="PlayerVisuals"]
 texture = ExtResource("1_pgm6w")
 offset = Vector2(0, -3.865)
 hframes = 8
 vframes = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.5, 2)
-shape = SubResource("RectangleShape2D_daww8")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerVisuals"]
+root_node = NodePath("../..")
 libraries = {
 "": SubResource("AnimationLibrary_p8vf3")
 }
 
-[node name="AnimationTree" type="AnimationTree" parent="."]
+[node name="AnimationTree" type="AnimationTree" parent="PlayerVisuals"]
+root_node = NodePath("../..")
 libraries = {
 "": SubResource("AnimationLibrary_p8vf3")
 }
@@ -242,6 +249,7 @@ tree_root = SubResource("AnimationNodeStateMachine_khwfa")
 anim_player = NodePath("../AnimationPlayer")
 parameters/conditions/isIdle = false
 parameters/conditions/isJumping = false
+parameters/conditions/isLanding = false
 parameters/conditions/isRunning = false
 
 [node name="PhantomCamera2D" type="Node2D" parent="."]
@@ -271,5 +279,37 @@ tween_parameters = null
 tween_on_load = true
 inactive_update_mode = 0
 
-[node name="PhantomCamera2DWrapper" type="Node2D" parent="." groups=["Camera"]]
+[node name="PhantomCamera2DWrapper" type="Node2D" parent="." node_paths=PackedStringArray("PhantomCamera") groups=["Camera"]]
 script = ExtResource("6_elyag")
+PhantomCamera = NodePath("../PhantomCamera2D")
+
+[node name="DebugInformation" type="Node2D" parent="."]
+visible = false
+
+[node name="VelocityDebug" type="Label" parent="DebugInformation" node_paths=PackedStringArray("_player")]
+offset_left = -20.0
+offset_top = -56.0
+offset_right = 20.0
+offset_bottom = -7.0
+theme_override_font_sizes/font_size = 11
+text = "V: x
+H: x
+G: True"
+vertical_alignment = 1
+script = ExtResource("7_pb5n5")
+_player = NodePath("../..")
+
+[node name="StateDebug" type="Label" parent="DebugInformation" node_paths=PackedStringArray("_playerMovement")]
+offset_left = -20.0
+offset_top = 13.0
+offset_right = 20.0
+offset_bottom = 36.0
+text = "xxx"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("8_qchvr")
+_playerMovement = NodePath("../../PlayerMovement")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.5, 2)
+shape = SubResource("RectangleShape2D_daww8")

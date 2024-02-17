@@ -10,12 +10,12 @@ namespace UnstableConcoction.Di;
 
 [SuperNode(typeof(Provider))]
 [GlobalClass]
-public partial class NodesProvider: Node, IProvide<PlayerController>, IProvide<PhantomCamera2DWrapper>
+public partial class NodesProvider: Node, IProvide<Player.Player>, IProvide<PhantomCamera2DWrapper>
 {
     public override partial void _Notification(int what);
     public override void _Ready() => Provide();
     
-    public PlayerController Value()
+    public Player.Player Value()
     {
         var playerGroup = GetTree().GetNodesInGroup("Player");
         
@@ -28,7 +28,7 @@ public partial class NodesProvider: Node, IProvide<PlayerController>, IProvide<P
                 Log.Error("More than one player found in the scene");
                 throw new ConstraintException();
             default:
-                return (PlayerController) playerGroup[0];
+                return (Player.Player) playerGroup[0];
         }
     }
 

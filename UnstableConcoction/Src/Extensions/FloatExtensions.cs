@@ -4,8 +4,8 @@ namespace UnstableConcoction.Extensions;
 
 public static class FloatExtensions
 {
-    public static bool IsAbout(this float value, float compare)
+    public static bool IsEqualApprox(this float value, float compare)
     {
-        return Mathf.Abs(value - compare) < 0.01f;
+        return Mathf.IsEqualApprox(value, compare);
     }
 }
